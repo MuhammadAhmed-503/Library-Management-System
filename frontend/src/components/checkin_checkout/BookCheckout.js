@@ -1,7 +1,7 @@
 import React, {lazy,startTransition, useState } from 'react';
-// import CheckoutReceipt from './CheckoutReceipt';
-// import SearchBar from '../search_comp/SearchBar';
-// import ItemList from '../search_comp/ItemList';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShoppingCart, faArrowRight, faTimes, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
+import { toast } from 'react-toastify';
 
 const CheckoutReceipt = lazy(() => import('./CheckoutReceipt'));
 const SearchBar = lazy(() => import('../search_comp/SearchBar'));
@@ -61,7 +61,7 @@ const BookCheckout = () => {
     if (searchedBook && searchedBorrower) {
       setShowSelectedItems(true);
     } else {
-      alert('Please select both a book and a borrower.');
+      toast.warning('Please select both a book and a borrower.');
     }
   });
   }
@@ -96,118 +96,132 @@ const BookCheckout = () => {
       })
         .then((response) => {
           if (response.ok) {
-            alert('Book checked out successfully!');
-            // Reset state and form data
+            toast.success('Book checked out successfully!');
             setSearchedBook(null);
             setSearchedBorrower(null);
             setConfirmCheckout('');
             setSelectedBook(null);
             setSelectedBorrower(null);
-            setShowSelectedItems(false); // Hide selected items
+            setShowSelectedItems(false);
           } else {
             throw new Error('Failed to checkout book');
           }
         })
         .catch((error) => {
           console.error('Error checking out book:', error);
-          alert('Error checking out book. Please try again.');
+          toast.error('Error checking out book. Please try again.');
         });
     } else {
-      alert('Please type "checkout" in the confirmation box and select both a book and a borrower.');
+      toast.warning('Please type "checkout" in the confirmation box and select both a book and a borrower.');
     }
   };
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold text-center mb-6">Book Checkout</h1>
-      {!showSelectedItems && (
-          <SearchBar
-            placeholder="Search Book..."
-            onSearch={handleBookSearch}
-            selectedItem={selectedBook}
-          /> 
-      )}
-          <ItemList
-            items={books}
-            onSelectItem={(item) => handleItemSelect(item, 'book')}
-            itemType="book"
-            isVisible={showBookList}
-          />
-      {!showSelectedItems && (
-          <SearchBar
-            placeholder="Search Borrower..."
-            onSearch={handleBorrowerSearch}
-            selectedItem={selectedBorrower}
-          />
-      )}
-          <ItemList
-            items={borrowers}
-            onSelectItem={(item) => handleItemSelect(item, 'borrower')}
-            itemType="borrower"
-            isVisible={showBorrowerList}
-          />
-      {!showSelectedItems && (
-        <>
-          <div className="mt-2">
-            <button
-              type="button"
-              className="bg-blue-700 text-white py-4 mb-4 w-full rounded font-semibold hover:bg-blue-600 focus:ring-4 focus:ring-blue-500"
-              onClick={handleContinue}
-            >
-              Continue
-            </button>
+    <div className="p-4 sm:p-6 lg:p-8 animate-fadeIn">
+      <div className="max-w-xl mx-auto w-full">
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-violet-600/20 rounded-xl sm:rounded-2xl mb-3 sm:mb-4">
+            <FontAwesomeIcon icon={faShoppingCart} className="text-2xl sm:text-3xl text-violet-400" />
           </div>
-          <div className="mt-2">
-            <button
-              type="button"
-              className="bg-red-100 text-red-500 py-4 mb-4 w-full rounded font-semibold hover:bg-red-200 ring-4 ring-red-300 focus:ring-4 focus:ring-red-500 focus:cursor-alias"
-              onClick={handleReset}
-            >
-                Clear
-            </button>
-          </div>
-        </>
-      )}
-     
-      {showSelectedItems && (
-        <>
-        <CheckoutReceipt selectedBook={selectedBook} selectedBorrower={selectedBorrower} />
-        <form onSubmit={(e) => e.preventDefault()} className='w-screen max-w-md'>
-          <div className="bg-gray-700 rounded-lg p-4 mt-4">
-            <div className="mb-4">
-              <label htmlFor="confirmation" className="block">Confirmation</label>
-              <input
-                type="text"
-                id="confirmation"
-                placeholder="Type 'checkout' to confirm"
-                className="border bg-gray-200 text-gray-500 border-gray-300 rounded-lg p-2 w-full"
-                value={confirmCheckout}
-                onChange={(e) => setConfirmCheckout(e.target.value)}
+          <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent">
+            Book Check Out
+          </h1>
+          <p className="text-slate-400 mt-2 text-sm sm:text-base">Lend a book to a borrower</p>
+        </div>
+
+        {!showSelectedItems && (
+          <div className="space-y-4 sm:space-y-6">
+            <div>
+              <h3 className="text-slate-300 font-medium mb-2 sm:mb-3 text-sm sm:text-base">Select a Book</h3>
+              <SearchBar
+                placeholder="Search available books..."
+                onSearch={handleBookSearch}
+                selectedItem={selectedBook}
               />
             </div>
-          </div>
-          <div className="mt-4">
+            <ItemList
+              items={books}
+              onSelectItem={(item) => handleItemSelect(item, 'book')}
+              itemType="book"
+              isVisible={showBookList}
+            />
+            
+            <div>
+              <h3 className="text-slate-300 font-medium mb-2 sm:mb-3 text-sm sm:text-base">Select a Borrower</h3>
+              <SearchBar
+                placeholder="Search borrowers..."
+                onSearch={handleBorrowerSearch}
+                selectedItem={selectedBorrower}
+              />
+            </div>
+            <ItemList
+              items={borrowers}
+              onSelectItem={(item) => handleItemSelect(item, 'borrower')}
+              itemType="borrower"
+              isVisible={showBorrowerList}
+            />
+
             <button
               type="button"
-              className="bg-blue-700 text-white py-4 mb-4 w-full rounded font-semibold hover:bg-blue-600 focus:ring-4 focus:ring-blue-500"
-              onClick={handleCheckout}
+              className="w-full py-3 sm:py-4 bg-gradient-to-r from-violet-600 to-violet-500 hover:from-violet-500 hover:to-violet-400 text-white font-semibold rounded-lg sm:rounded-xl transition-all duration-300 shadow-lg shadow-violet-500/30 hover:shadow-violet-500/50 hover:-translate-y-1 flex items-center justify-center gap-2 text-sm sm:text-base"
+              onClick={handleContinue}
             >
-              Checkout
+              <span>Continue</span>
+              <FontAwesomeIcon icon={faArrowRight} />
             </button>
-          </div>
-        </form>
-          <div className="mt-4">
+
             <button
               type="button"
-              className="bg-red-100 text-red-500 py-4 mb-4 w-full rounded font-semibold hover:bg-red-200 ring-4 ring-red-300 focus:ring-4 focus:ring-red-500 focus:cursor-alias"
+              className="w-full py-3 sm:py-4 bg-red-600/20 hover:bg-red-600/30 text-red-400 font-semibold rounded-lg sm:rounded-xl transition-all duration-300 border border-red-500/30 hover:border-red-500/50 flex items-center justify-center gap-2 text-sm sm:text-base"
               onClick={handleReset}
             >
+              <FontAwesomeIcon icon={faTimes} />
+              Clear Selection
+            </button>
+          </div>
+        )}
+     
+        {showSelectedItems && (
+          <div className="space-y-4">
+            <CheckoutReceipt selectedBook={selectedBook} selectedBorrower={selectedBorrower} />
+            
+            <form onSubmit={(e) => e.preventDefault()}>
+              <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-slate-700/50 shadow-xl">
+                <label htmlFor="confirmation" className="block text-slate-300 font-medium mb-2 text-sm sm:text-base">
+                  <FontAwesomeIcon icon={faCheckCircle} className="mr-2 text-violet-500" />
+                  Confirmation
+                </label>
+                <input
+                  type="text"
+                  id="confirmation"
+                  placeholder="Type 'checkout' to confirm"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-900/80 border-2 border-violet-600/50 rounded-lg sm:rounded-xl text-slate-200 placeholder-slate-500 focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500/20 transition-all duration-300 text-sm sm:text-base"
+                  value={confirmCheckout}
+                  onChange={(e) => setConfirmCheckout(e.target.value)}
+                />
+              </div>
+              
+              <button
+                type="button"
+                className="w-full mt-4 py-3 sm:py-4 bg-gradient-to-r from-violet-600 to-violet-500 hover:from-violet-500 hover:to-violet-400 text-white font-semibold rounded-lg sm:rounded-xl transition-all duration-300 shadow-lg shadow-violet-500/30 hover:shadow-violet-500/50 hover:-translate-y-1 flex items-center justify-center gap-2 text-sm sm:text-base"
+                onClick={handleCheckout}
+              >
+                <FontAwesomeIcon icon={faCheckCircle} />
+                Confirm Checkout
+              </button>
+            </form>
+            
+            <button
+              type="button"
+              className="w-full py-3 sm:py-4 bg-red-600/20 hover:bg-red-600/30 text-red-400 font-semibold rounded-lg sm:rounded-xl transition-all duration-300 border border-red-500/30 hover:border-red-500/50 flex items-center justify-center gap-2 text-sm sm:text-base"
+              onClick={handleReset}
+            >
+              <FontAwesomeIcon icon={faTimes} />
               Cancel
             </button>
           </div>
-        </>
-      )}
-
+        )}
+      </div>
     </div>
   );
 };

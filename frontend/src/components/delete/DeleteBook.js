@@ -1,7 +1,7 @@
 import React, { lazy, startTransition, useState } from "react";
-// import SearchBar from "../search_comp/SearchBar";
-// import ItemList from "../search_comp/ItemList";
-// import FormComp from "../search_comp/FormComp";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash, faTimes, faBook } from '@fortawesome/free-solid-svg-icons';
+import { toast } from 'react-toastify';
 
 const SearchBar = lazy(() => import("../search_comp/SearchBar"));
 const ItemList = lazy(() => import("../search_comp/ItemList"));
@@ -78,7 +78,7 @@ const DeleteBook = () => {
           body: JSON.stringify(requestBody),
         });
         if (response.ok) {
-          alert("Book deleted successfully");
+          toast.success("Book deleted successfully");
           console.log("Book deleted successfully!");
           setConfirmDelete("");
           setSelectedBook(null);
@@ -86,52 +86,72 @@ const DeleteBook = () => {
           handleReset();
         }
       } catch (error) {
+        toast.error("Error deleting book");
         console.error("Error deleting book:", error);
       }
     } else {
-      alert('Please type "delete" in the confirmation box to delete the book.');
+      toast.warning('Please type "delete" in the confirmation box to delete the book.');
     }
   };
 
   return (
-    <div className="p-14">
-      <h1 className="text-2xl font-bold text-center mb-6">Delete Book</h1>
-      {!selectedBook ? (
-        <>
-          <SearchBar
-            onSearch={handleSearch}
-            selectedItem={selectedBook}
-            placeholder="Search Books..."
-          />
-          <ItemList
-            items={books}
-            onSelectItem={handleSelectBook}
-            itemType="book"
-            isVisible={showBookList}
-          />
-        </>
-      ) : (
-        <>
-          <FormComp 
-            form_data={formData}
-            setConfirm={setConfirmDelete}
-            type="deletebook" />
-          <div className="mt-2">
-            <button
-              onClick={handleReset}
-              className="bg-blue-700 text-white py-4 mb-4 w-full rounded font-semibold hover:bg-blue-600 focus:ring-4 focus:ring-blue-500 focus:cursor-alias"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleDelete}
-              className="bg-red-100 text-red-500 py-4 mb-4 w-full rounded font-semibold hover:bg-red-200 ring-2 ring-red-300 focus:ring-4 focus:ring-red-500"
-            >
-              Delete
-            </button>
+    <div className="p-4 sm:p-6 lg:p-8 animate-fadeIn">
+      <div className="max-w-xl mx-auto w-full">
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-red-600/20 rounded-xl sm:rounded-2xl mb-3 sm:mb-4">
+            <FontAwesomeIcon icon={faTrash} className="text-2xl sm:text-3xl text-red-400" />
           </div>
-        </>
-      )}
+          <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-red-400 to-rose-400 bg-clip-text text-transparent">
+            Delete Book
+          </h1>
+          <p className="text-slate-400 mt-2 text-sm sm:text-base">Remove a book from the library</p>
+        </div>
+
+        {!selectedBook ? (
+          <>
+            <SearchBar
+              onSearch={handleSearch}
+              selectedItem={selectedBook}
+              placeholder="Search books to delete..."
+            />
+            {books.length === 0 ? (
+              <div className="text-center py-8 sm:py-12 bg-slate-800/30 rounded-xl sm:rounded-2xl border border-slate-700/50 mt-4">
+                <FontAwesomeIcon icon={faBook} className="text-3xl sm:text-4xl text-slate-600 mb-3 sm:mb-4" />
+                <p className="text-slate-500 text-sm sm:text-base">Search for a book to delete</p>
+              </div>
+            ) : (
+              <ItemList
+                items={books}
+                onSelectItem={handleSelectBook}
+                itemType="book"
+                isVisible={showBookList}
+              />
+            )}
+          </>
+        ) : (
+          <>
+            <FormComp 
+              form_data={formData}
+              setConfirm={setConfirmDelete}
+              type="deletebook" />
+            <div className="mt-4 sm:mt-6 space-y-3">
+              <button
+                onClick={handleReset}
+                className="w-full py-3 sm:py-4 bg-slate-700 hover:bg-slate-600 text-slate-200 font-semibold rounded-lg sm:rounded-xl transition-all duration-300 flex items-center justify-center gap-2 text-sm sm:text-base"
+              >
+                <FontAwesomeIcon icon={faTimes} />
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                className="w-full py-3 sm:py-4 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white font-semibold rounded-lg sm:rounded-xl transition-all duration-300 shadow-lg shadow-red-500/30 hover:shadow-red-500/50 flex items-center justify-center gap-2 text-sm sm:text-base">
+                <FontAwesomeIcon icon={faTrash} />
+                Delete Book
+              </button>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 };

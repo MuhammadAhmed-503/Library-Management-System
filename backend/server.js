@@ -16,7 +16,7 @@ app.use(cors());
 mongoose.connect(`${process.env.MONGODB_URI}`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  dbName: 'Library_DB' //You may change the database name
+  dbName: 'BLMS' //You may change the database name
 });
 const db = mongoose.connection;
 
@@ -33,7 +33,7 @@ app.use('/api/authors', authorRoutes);
 app.use('/api/counts', countRoutes);
 
 // Start the server
-const PORT = `${process.env.PORT}` || 5500;
+const PORT = `${process.env.PORT}` || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

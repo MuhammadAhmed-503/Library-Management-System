@@ -6,6 +6,7 @@ const bookSchema = new mongoose.Schema({
   category: String,
   price: Number,
   borrower: { type: mongoose.Schema.Types.ObjectId, ref: 'Borrower', default: null },
+  borrowedDate: { type: Date, default: null },
 });
 
 const Book = mongoose.model('Book', bookSchema);

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBook, faUsers, faUserTie, faBookOpen, faUserSlash, faLayerGroup, faSync } from '@fortawesome/free-solid-svg-icons';
 
 const Home = ({showBooks,showAuthors,showBorrowers,showBorrowersWithoutBook,showCheckoutBooks,showRemainingBooks}) => {
   const [counts, setCounts] = useState({
@@ -9,9 +11,11 @@ const Home = ({showBooks,showAuthors,showBorrowers,showBorrowersWithoutBook,show
     borrowersWithoutBook: 0,
   });
   const [forceUpdate, setForceUpdate] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchCounts = async () => {
+      setIsLoading(true);
       try {
         const response = await fetch(`${process.env.REACT_APP_API_URI}/counts`);
         if (response.ok) {
@@ -29,6 +33,8 @@ const Home = ({showBooks,showAuthors,showBorrowers,showBorrowersWithoutBook,show
         }
       } catch (error) {
         console.error('Error fetching counts:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -39,51 +45,113 @@ const Home = ({showBooks,showAuthors,showBorrowers,showBorrowersWithoutBook,show
     setForceUpdate((prev) => !prev);
   };
 
-  const Card = ({ children }) => {
-    return <div className="bg-gray-900 rounded-lg justify-center shadow-md px-4 py-4 mb-1 max-w-xl">{children}</div>;
-  };
-
-  const StatCard = ({ title, count, onClickHandle }) => {
+  const StatCard = ({ title, count, onClickHandle, icon, gradient, delay }) => {
     return (
       <div
-        className="bg-gray-800 rounded-lg shadow-md px-4 py-2 mb-2 cursor-pointer focus:scale-95 focus:ring-3 focus:ring-blue-400 hover:scale-105 transition-transform transition-ring transition-duration-100"
+        className={`group relative overflow-hidden rounded-xl sm:rounded-2xl p-4 sm:p-6 cursor-pointer transition-all duration-500 hover:scale-105 hover:-translate-y-2 animate-fadeIn`}
+        style={{ animationDelay: `${delay}ms` }}
         onClick={onClickHandle}
         tabIndex={0}
       >
-        <p className="font-semibold">{title}:</p>
-        <p>{count}</p>
+        {/* Background Gradient */}
+        <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-90`}></div>
+        
+        {/* Glow Effect */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        
+        {/* Content */}
+        <div className="relative z-10">
+          <div className="flex items-center justify-between mb-3 sm:mb-4">
+            <div className="p-2 sm:p-3 bg-white/20 rounded-lg sm:rounded-xl backdrop-blur-sm">
+              <FontAwesomeIcon icon={icon} className="text-lg sm:text-2xl text-white" />
+            </div>
+            <span className="text-2xl sm:text-4xl font-bold text-white">{isLoading ? '...' : count}</span>
+          </div>
+          <h3 className="text-white/90 font-medium text-sm sm:text-lg">{title}</h3>
+        </div>
+        
+        {/* Decorative Elements */}
+        <div className="absolute -bottom-4 -right-4 w-16 sm:w-24 h-16 sm:h-24 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"></div>
       </div>
     );
   };
   
 
   return (
-    <div className=" justify-center p-8">
-      <Card>
-        <h1 className=" font-bold text-center mb-6">Welcome to the Library Management System</h1>
-        <p className=" text-center">This is a simple library management system where</p>
-        <p className=" text-center"> you can add, update, and delete books and borrowers.</p>
-        <h2 className="font-bold text-center mt-8">-:Status:-</h2>
-      </Card>
-
-      <div className="flex justify-center mt-2">
-        <div className="grid grid-cols-2 gap-4">
-          <Card>
-            <StatCard title="Total Books" onClickHandle={showBooks} count={counts.books} />
-            <StatCard title="Total Authors" onClickHandle={showAuthors} count={counts.authors} />
-            <StatCard title="Total Borrowers" onClickHandle={showBorrowers} count={counts.borrowers} />
-          </Card>
-          <Card>
-            <StatCard title="Checked Out Books" onClickHandle={showCheckoutBooks} count={counts.booksWithBorrower} />
-            <StatCard title="Borrowers without Books" onClickHandle={showBorrowersWithoutBook} count={counts.borrowersWithoutBook} />
-            <StatCard title="Remaining Books" onClickHandle={showRemainingBooks} count={parseInt(counts.books) - parseInt(counts.booksWithBorrower)} />
-          </Card>
+    <div className="min-h-screen p-4 sm:p-6 lg:p-8">
+      {/* Hero Section */}
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-8 sm:mb-12 animate-fadeIn">
+          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-emerald-400 via-cyan-400 to-amber-400 bg-clip-text text-transparent">
+            Welcome to Library Management System
+          </h1>
+          <p className="text-slate-400 text-sm sm:text-lg lg:text-xl max-w-2xl mx-auto px-4">
+            Your complete solution for managing books, authors, and borrowers efficiently
+          </p>
         </div>
-      </div>
-      <div className="flex justify-center">
-        <button onClick={triggerUpdate} className="mt-8 bg-gray-700 ring-1 ring-gray-500 hover:bg-gray-600 hover:ring-gray-700 text-gray-300 py-1 px-2 rounded-lg">
-          Force Refresh Counts
-        </button>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
+          <StatCard 
+            title="Total Books" 
+            count={counts.books} 
+            onClickHandle={showBooks}
+            icon={faBook}
+            gradient="from-emerald-600 to-emerald-800"
+            delay={100}
+          />
+          <StatCard 
+            title="Total Authors" 
+            count={counts.authors} 
+            onClickHandle={showAuthors}
+            icon={faUserTie}
+            gradient="from-cyan-600 to-cyan-800"
+            delay={200}
+          />
+          <StatCard 
+            title="Total Borrowers" 
+            count={counts.borrowers} 
+            onClickHandle={showBorrowers}
+            icon={faUsers}
+            gradient="from-violet-600 to-violet-800"
+            delay={300}
+          />
+          <StatCard 
+            title="Checked Out Books" 
+            count={counts.booksWithBorrower} 
+            onClickHandle={showCheckoutBooks}
+            icon={faBookOpen}
+            gradient="from-amber-600 to-amber-800"
+            delay={400}
+          />
+          <StatCard 
+            title="Borrowers without Books" 
+            count={counts.borrowersWithoutBook} 
+            onClickHandle={showBorrowersWithoutBook}
+            icon={faUserSlash}
+            gradient="from-rose-600 to-rose-800"
+            delay={500}
+          />
+          <StatCard 
+            title="Available Books" 
+            count={parseInt(counts.books) - parseInt(counts.booksWithBorrower)} 
+            onClickHandle={showRemainingBooks}
+            icon={faLayerGroup}
+            gradient="from-teal-600 to-teal-800"
+            delay={600}
+          />
+        </div>
+
+        {/* Refresh Button */}
+        <div className="flex justify-center">
+          <button 
+            onClick={triggerUpdate} 
+            className={`group flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-2.5 sm:py-3 bg-slate-800/80 hover:bg-slate-700 border border-slate-600/50 hover:border-emerald-500/50 rounded-xl text-slate-300 hover:text-emerald-400 transition-all duration-300 shadow-lg hover:shadow-emerald-500/20 text-sm sm:text-base ${isLoading ? 'animate-pulse' : ''}`}
+          >
+            <FontAwesomeIcon icon={faSync} className={`transition-transform duration-500 ${isLoading ? 'animate-spin' : 'group-hover:rotate-180'}`} />
+            <span className="font-medium">Refresh Statistics</span>
+          </button>
+        </div>
       </div>
     </div>
   );

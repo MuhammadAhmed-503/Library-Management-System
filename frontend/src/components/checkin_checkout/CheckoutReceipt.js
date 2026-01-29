@@ -1,6 +1,8 @@
 import React from 'react';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBook, faUser, faEnvelope, faPhone, faMapMarkerAlt, faFilePdf, faReceipt } from '@fortawesome/free-solid-svg-icons';
 
 const CheckoutReceipt = ({ selectedBook, selectedBorrower }) => {
   const handleSaveAsPDF = () => {
@@ -49,39 +51,76 @@ const CheckoutReceipt = ({ selectedBook, selectedBorrower }) => {
   };
   
     return (
-      <div className="bg-gray-700 text-left rounded-lg p-8 w-screen max-w-md mb-4">
-        <div className=' pl-2'>
-          <h1 className="text-2xl font-bold text-center mb-4">-:Checkout Receipt:-</h1>
-          <h3 className="text-lg font-bold mb-2">Selected Book</h3>
-          <p>
-            <span className="font-semibold">Title: </span>
-            <span className="font-light">{selectedBook.title}</span>
-          </p>
-          <p>
-            <span className="font-semibold">Author: </span>
-            <span className="font-light">{selectedBook.author.authorName}</span>
-          </p>
-          <h3 className="text-lg font-bold mt-4 mb-4">Selected Borrower</h3>
-          <p className="mt-2 mb-2">
-            <span className="font-semibold">Name: </span>
-            <span className="font-light">{selectedBorrower.borrowerName}</span>
-          </p>
-          <p className="mt-2 mb-2">
-            <span className="font-semibold">Email: </span>
-            <span className="font-light">{selectedBorrower.borrowerEmail}</span>
-          </p>
-          <p className="mt-2 mb-2">
-            <span className="font-semibold">Phone Number: </span>
-            <span className="font-light">{selectedBorrower.borrowerPhone}</span>
-          </p>
-          <p className="mt-2 mb-4">
-            <span className="font-semibold">Address: </span>
-            <span className="font-light">{selectedBorrower.borrowerAddress}</span>
-          </p>
+      <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-slate-700/50 shadow-xl overflow-hidden">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-violet-600/20 to-purple-600/20 p-3 sm:p-4 border-b border-slate-700/50">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-violet-500/20 rounded-lg flex items-center justify-center">
+              <FontAwesomeIcon icon={faReceipt} className="text-violet-400 text-sm sm:text-base" />
+            </div>
+            <h2 className="text-lg sm:text-xl font-bold text-violet-300">Checkout Receipt</h2>
+          </div>
+        </div>
+
+        <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+          {/* Book Details */}
+          <div>
+            <h3 className="text-xs sm:text-sm uppercase tracking-wide text-emerald-400 font-semibold mb-2 sm:mb-3 flex items-center gap-2">
+              <FontAwesomeIcon icon={faBook} />
+              Selected Book
+            </h3>
+            <div className="bg-slate-900/50 rounded-lg sm:rounded-xl p-3 sm:p-4 space-y-2">
+              <p className="flex flex-col sm:flex-row sm:justify-between gap-0.5 sm:gap-2">
+                <span className="text-slate-500 text-xs sm:text-sm">Title</span>
+                <span className="text-slate-200 font-medium text-sm sm:text-base">{selectedBook.title}</span>
+              </p>
+              <p className="flex flex-col sm:flex-row sm:justify-between gap-0.5 sm:gap-2">
+                <span className="text-slate-500 text-xs sm:text-sm">Author</span>
+                <span className="text-slate-200 text-sm sm:text-base">{selectedBook.author.authorName}</span>
+              </p>
+            </div>
+          </div>
+
+          {/* Borrower Details */}
+          <div>
+            <h3 className="text-xs sm:text-sm uppercase tracking-wide text-violet-400 font-semibold mb-2 sm:mb-3 flex items-center gap-2">
+              <FontAwesomeIcon icon={faUser} />
+              Selected Borrower
+            </h3>
+            <div className="bg-slate-900/50 rounded-lg sm:rounded-xl p-3 sm:p-4 space-y-2">
+              <p className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-0.5 sm:gap-2">
+                <span className="text-slate-500 flex items-center gap-2 text-xs sm:text-sm">
+                  <FontAwesomeIcon icon={faUser} className="text-xs" /> Name
+                </span>
+                <span className="text-slate-200 font-medium text-sm sm:text-base">{selectedBorrower.borrowerName}</span>
+              </p>
+              <p className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-0.5 sm:gap-2">
+                <span className="text-slate-500 flex items-center gap-2 text-xs sm:text-sm">
+                  <FontAwesomeIcon icon={faEnvelope} className="text-xs" /> Email
+                </span>
+                <span className="text-slate-200 text-sm sm:text-base break-all">{selectedBorrower.borrowerEmail}</span>
+              </p>
+              <p className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-0.5 sm:gap-2">
+                <span className="text-slate-500 flex items-center gap-2 text-xs sm:text-sm">
+                  <FontAwesomeIcon icon={faPhone} className="text-xs" /> Phone
+                </span>
+                <span className="text-slate-200 text-sm sm:text-base">{selectedBorrower.borrowerPhone}</span>
+              </p>
+              <p className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-0.5 sm:gap-2">
+                <span className="text-slate-500 flex items-center gap-2 text-xs sm:text-sm">
+                  <FontAwesomeIcon icon={faMapMarkerAlt} className="text-xs" /> Address
+                </span>
+                <span className="text-slate-200 text-sm sm:text-base">{selectedBorrower.borrowerAddress}</span>
+              </p>
+            </div>
+          </div>
+
+          {/* Save Button */}
           <button
-            className="bg-blue-700 text-white py-2 px-4 rounded font-semibold hover:bg-blue-600 focus:ring-4 focus:ring-blue-500"
+            className="w-full py-2.5 sm:py-3 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-semibold rounded-lg sm:rounded-xl transition-all duration-300 shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40 flex items-center justify-center gap-2 text-sm sm:text-base"
             onClick={handleSaveAsPDF}
           >
+            <FontAwesomeIcon icon={faFilePdf} />
             Save as PDF
           </button>
         </div>

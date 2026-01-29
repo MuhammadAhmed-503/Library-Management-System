@@ -70,7 +70,7 @@ router.put("/checkin", async (req, res) => {
     // console.log(bookId, borrowerId);
     const updatedBook = await Book.findByIdAndUpdate(
       bookId,
-      { borrower: null },
+      { borrower: null, borrowedDate: null },
       { new: true }
     );
     if (!updatedBook) {
@@ -95,7 +95,7 @@ router.put("/checkout", async (req, res) => {
 
     const updatedBook = await Book.findByIdAndUpdate(
       bookId,
-      { $set: { borrower: borrowerId } },
+      { $set: { borrower: borrowerId, borrowedDate: new Date() } },
       { new: true }
     );
 
@@ -114,6 +114,28 @@ router.put("/checkout", async (req, res) => {
     }
 
     res.status(200).json(updatedBook);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get all books
+router.get("/", async (req, res) => {
+  try {
+    const books = await Book.find().populate("author").populate("borrower");
+    res.json(books);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get all borrowed books with borrower details
+router.get("/borrowed", async (req, res) => {
+  try {
+    const books = await Book.find({ borrower: { $ne: null } })
+      .populate("author")
+      .populate("borrower");
+    res.json(books);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

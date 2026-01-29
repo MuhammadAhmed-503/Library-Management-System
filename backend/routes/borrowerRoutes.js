@@ -34,6 +34,16 @@ router.put('/:id', async (req, res) => {
   }
 });
 
+// Get all borrowers
+router.get('/', async (req, res) => {
+  try {
+    const borrowers = await Borrower.find().populate('books');
+    res.json(borrowers);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 router.get('/search', async (req, res) => {
   try {
     const query = req.query.query;

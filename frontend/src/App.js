@@ -1,4 +1,6 @@
 import React, { lazy, useState, startTransition } from "react";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // import Home from "./components/Home.js";
 // import Header from "./components/Header.js";
@@ -37,6 +39,12 @@ const ShowBorrowers = lazy(() => import("./components/show/ShowBorrowers.js"));
 const ShowBooks = lazy(() => import("./components/show/ShowBooks.js"));
 const ShowAuthors = lazy(() => import("./components/show/ShowAuthors.js"));
 
+// Table Components
+const BooksTable = lazy(() => import("./components/tables/BooksTable.js"));
+const BorrowersTable = lazy(() => import("./components/tables/BorrowersTable.js"));
+const AuthorsTable = lazy(() => import("./components/tables/AuthorsTable.js"));
+const BorrowedBooksTable = lazy(() => import("./components/tables/BorrowedBooksTable.js"));
+
 function App() {
   const [activeForm, setActiveForm] = useState("goToHome");
 
@@ -53,7 +61,7 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div className="App min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
       <Header
         onAddBookClick={() => handleButtonClick("addBook")}
         onAddBorrowerClick={() => handleButtonClick("addBorrower")}
@@ -65,13 +73,17 @@ function App() {
         onDeleteBorrowerClick={() => handleButtonClick("deleteBorrower")}
         onCheckinClick={() => handleButtonClick("checkinBook")}
         onCheckoutClick={() => handleButtonClick("checkoutBook")}
+        onBooksTableClick={() => handleButtonClick("booksTable")}
+        onBorrowersTableClick={() => handleButtonClick("borrowersTable")}
+        onAuthorsTableClick={() => handleButtonClick("authorsTable")}
+        onBorrowedBooksTableClick={() => handleButtonClick("borrowedBooksTable")}
         goHome={handleGoHomeClick}
       />
       <div
-        className="min-h-screen text-white flex justify-center items-center"
+        className="min-h-screen text-white flex justify-center items-start pt-4 sm:pt-6 lg:pt-8 px-2 sm:px-4"
         align="center"
       >
-        <div className="bg-gray-800 rounded-lg shadow-gray-700 justify-center shadow-2xl max-w-fit">
+        <div className="bg-slate-900/80 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-2xl shadow-slate-950/50 border border-slate-800/50 w-full max-w-4xl mx-0 sm:mx-4">
           {activeForm === "addBook" && <AddBook />}
           {activeForm === "addBorrower" && <AddBorrower />}
           {activeForm === "addAuthor" && <AddAuthor />}
@@ -98,8 +110,29 @@ function App() {
           {activeForm === "chckoutBook" && <ShowBooks type="borrowed"/>}
           {activeForm === "remainingBooks" && <ShowBooks type="available"/>}
           {activeForm === "totalAuthors" && <ShowAuthors/>}
+          {activeForm === "booksTable" && <BooksTable/>}
+          {activeForm === "borrowersTable" && <BorrowersTable/>}
+          {activeForm === "authorsTable" && <AuthorsTable/>}
+          {activeForm === "borrowedBooksTable" && <BorrowedBooksTable/>}
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        toastStyle={{
+          backgroundColor: '#1e293b',
+          border: '1px solid #334155',
+          borderRadius: '12px',
+        }}
+      />
     </div>
   );
 }

@@ -40,6 +40,16 @@ router.post('/', async (req, res) => {
   }
 });
 
+// Get all authors
+router.get('/', async (req, res) => {
+  try {
+    const authors = await Author.find().populate('books');
+    res.json(authors);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 router.get('/search', async (req, res) => {
     try {
       const query = req.query.query;
