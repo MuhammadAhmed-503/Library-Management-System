@@ -1,4 +1,4 @@
-import React, {lazy,useState,startTransition } from "react";
+import React, {lazy,useState,startTransition, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRotateLeft, faTimes, faBook } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
@@ -19,7 +19,27 @@ const CheckinBook = () => {
     price: "",
   });
 
+  // Fetch all borrowed books on component mount
+  const fetchAllBorrowedBooks = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URI}/books/borrowed`);
+      const data = await response.json();
+      setBooks(data);
+    } catch (error) {
+      console.error("Error fetching books:", error);
+      setBooks([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllBorrowedBooks();
+  }, []);
+
   const handleSearch = async (query) => {
+    if (!query || query.trim() === '') {
+      fetchAllBorrowedBooks();
+      return;
+    }
     try {
       const response = await fetch(
         `${process.env.REACT_APP_API_URI}/books/searchin?query=${query}`
@@ -63,8 +83,8 @@ const CheckinBook = () => {
     startTransition(() => {
       setSelectedBook(null);
       setShowBookList(true);
-      setBooks([]);
       setConfirmCheckin("");
+      fetchAllBorrowedBooks();
     });
   };
 
@@ -133,7 +153,7 @@ const CheckinBook = () => {
             {books.length === 0 ? (
               <div className="text-center py-8 sm:py-12 bg-slate-800/30 rounded-xl sm:rounded-2xl border border-slate-700/50 mt-4">
                 <FontAwesomeIcon icon={faBook} className="text-3xl sm:text-4xl text-slate-600 mb-3 sm:mb-4" />
-                <p className="text-slate-500 text-sm sm:text-base">Search for a borrowed book to check in</p>
+                <p className="text-slate-500 text-sm sm:text-base">No borrowed books found</p>
               </div>
             ) : (
               <ItemList

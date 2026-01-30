@@ -20,7 +20,27 @@ const UpdateBook = () => {
   const [selectedBook, setSelectedBook] = useState(null);
   const [showBookList, setShowBookList] = useState(true);
 
+  // Fetch all books on component mount
+  const fetchAllBooks = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URI}/books`);
+      const data = await response.json();
+      setBooks(data);
+    } catch (error) {
+      console.error('Error fetching books:', error);
+      setBooks([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllBooks();
+  }, []);
+
   const handleSearch = async (query) => {
+    if (!query || query.trim() === '') {
+      fetchAllBooks();
+      return;
+    }
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URI}/books/search?query=${query}`);
       const data = await response.json();
@@ -56,9 +76,9 @@ const UpdateBook = () => {
       price: '',
       preAuthorID: ''
     });
-    setBooks([]);
     setSelectedBook(null);
     setShowBookList(true);
+    fetchAllBooks();
   };
   
 
@@ -131,7 +151,7 @@ const UpdateBook = () => {
             {books.length === 0 ? (
               <div className="text-center py-8 sm:py-12 bg-slate-800/30 rounded-xl sm:rounded-2xl border border-slate-700/50 mt-4">
                 <FontAwesomeIcon icon={faBook} className="text-3xl sm:text-4xl text-slate-600 mb-3 sm:mb-4" />
-                <p className="text-slate-500 text-sm sm:text-base">Search for a book to update</p>
+                <p className="text-slate-500 text-sm sm:text-base">No books found</p>
               </div>
             ) : (
               <ItemList items={books} onSelectItem={handleSelectBook} itemType="book" isVisible={showBookList} />

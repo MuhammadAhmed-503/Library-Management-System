@@ -1,4 +1,4 @@
-import React, {lazy,useState,startTransition } from "react";
+import React, {lazy,useState,startTransition, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faTimes, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
@@ -13,7 +13,27 @@ const DeleteBorrower = () => {
   const [selectedBorrower, setSelectedBorrower] = useState(null);
   const [showBorrowerList, setShowBorrowerList] = useState(true);
 
+  // Fetch all borrowers (without books) on mount
+  const fetchAllBorrowers = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URI}/borrowers/searchdel?query=`);
+      const data = await response.json();
+      setBorrowers(data);
+    } catch (error) {
+      console.error('Error fetching borrowers:', error);
+      setBorrowers([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllBorrowers();
+  }, []);
+
   const handleSearch = async (query) => {
+    if (!query || query.trim() === '') {
+      fetchAllBorrowers();
+      return;
+    }
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URI}/borrowers/searchdel?query=${query}`);
       const data = await response.json();
@@ -33,9 +53,9 @@ const DeleteBorrower = () => {
   const handleReset = () => {
     startTransition(() => {
       setSelectedBorrower(null);
-      setBorrowers([]);
       setConfirmDelete('');
       setShowBorrowerList(true);
+      fetchAllBorrowers();
     });
   };
 
@@ -85,7 +105,7 @@ const DeleteBorrower = () => {
             {borrowers.length === 0 ? (
               <div className="text-center py-8 sm:py-12 bg-slate-800/30 rounded-xl sm:rounded-2xl border border-slate-700/50 mt-4">
                 <FontAwesomeIcon icon={faUsers} className="text-3xl sm:text-4xl text-slate-600 mb-3 sm:mb-4" />
-                <p className="text-slate-500 text-sm sm:text-base">Search for a borrower to delete</p>
+                <p className="text-slate-500 text-sm sm:text-base">No borrowers found</p>
               </div>
             ) : (
               <ItemList items={borrowers} onSelectItem={handleSelectBorrower} isVisible={showBorrowerList} itemType="borrower" />

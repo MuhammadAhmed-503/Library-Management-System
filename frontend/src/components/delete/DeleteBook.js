@@ -1,4 +1,4 @@
-import React, { lazy, startTransition, useState } from "react";
+import React, { lazy, startTransition, useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faTimes, faBook } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
@@ -19,7 +19,27 @@ const DeleteBook = () => {
     price: "",
   });
 
+  // Fetch all books on component mount
+  const fetchAllBooks = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URI}/books`);
+      const data = await response.json();
+      setBooks(data);
+    } catch (error) {
+      console.error("Error fetching books:", error);
+      setBooks([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllBooks();
+  }, []);
+
   const handleSearch = async (query) => {
+    if (!query || query.trim() === '') {
+      fetchAllBooks();
+      return;
+    }
     try {
       const response = await fetch(
         `${process.env.REACT_APP_API_URI}/books/searchout?query=${query}`
@@ -38,7 +58,7 @@ const DeleteBook = () => {
       setShowBookList(false);
       setFormData({
         title: book.title,
-        authorName: book?.author.authorName || "",
+        authorName: book?.author?.authorName || "",
         category: book.category || "",
         price: book.price ? book.price.toString() : "",
       });
@@ -53,10 +73,10 @@ const DeleteBook = () => {
         category: "",
         price: "",
       });
-      setBooks([]);
       setSelectedBook(null);
       setShowBookList(true);
       setConfirmDelete("");
+      fetchAllBooks();
     });
   };
 
@@ -66,7 +86,7 @@ const DeleteBook = () => {
 
       const requestBody = {
         bookId,
-        authorId: author._id,
+        authorId: author?._id || null,
       };
 
       try {
@@ -82,7 +102,6 @@ const DeleteBook = () => {
           console.log("Book deleted successfully!");
           setConfirmDelete("");
           setSelectedBook(null);
-          setBooks([]);
           handleReset();
         }
       } catch (error) {
@@ -117,7 +136,7 @@ const DeleteBook = () => {
             {books.length === 0 ? (
               <div className="text-center py-8 sm:py-12 bg-slate-800/30 rounded-xl sm:rounded-2xl border border-slate-700/50 mt-4">
                 <FontAwesomeIcon icon={faBook} className="text-3xl sm:text-4xl text-slate-600 mb-3 sm:mb-4" />
-                <p className="text-slate-500 text-sm sm:text-base">Search for a book to delete</p>
+                <p className="text-slate-500 text-sm sm:text-base">No books found</p>
               </div>
             ) : (
               <ItemList

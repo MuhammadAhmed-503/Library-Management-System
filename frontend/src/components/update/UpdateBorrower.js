@@ -18,7 +18,27 @@ const UpdateBorrower = () => {
 
   const [selectedBorrower, setSelectedBorrower] = useState(null);
 
+  // Fetch all borrowers on component mount
+  const fetchAllBorrowers = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URI}/borrowers`);
+      const data = await response.json();
+      setBorrowers(data);
+    } catch (error) {
+      console.error('Error fetching borrowers:', error);
+      setBorrowers([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllBorrowers();
+  }, []);
+
   const handleSearch = async (query) => {
+    if (!query || query.trim() === '') {
+      fetchAllBorrowers();
+      return;
+    }
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URI}/borrowers/search?query=${query}`);
       const data = await response.json();
@@ -92,9 +112,9 @@ const UpdateBorrower = () => {
       borrowerPhone: '',
       borrowerAddress: '',
     });
-    setBorrowers([]);
     setSelectedBorrower(null);
     setShowBorrowerList(true);
+    fetchAllBorrowers();
   };
 
   useEffect(() => {
@@ -127,7 +147,7 @@ const UpdateBorrower = () => {
             {borrowers.length === 0 ? (
               <div className="text-center py-8 sm:py-12 bg-slate-800/30 rounded-xl sm:rounded-2xl border border-slate-700/50 mt-4">
                 <FontAwesomeIcon icon={faUsers} className="text-3xl sm:text-4xl text-slate-600 mb-3 sm:mb-4" />
-                <p className="text-slate-500 text-sm sm:text-base">Search for a borrower to update</p>
+                <p className="text-slate-500 text-sm sm:text-base">No borrowers found</p>
               </div>
             ) : (
               <ItemList items={borrowers} onSelectItem={handleSelectBorrower} isVisible={showBorrowerList} itemType="borrower" />

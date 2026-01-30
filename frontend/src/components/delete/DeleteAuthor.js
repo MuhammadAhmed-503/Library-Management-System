@@ -1,4 +1,4 @@
-import React, { lazy, useState, startTransition } from "react";
+import React, { lazy, useState, startTransition, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faTimes, faUserTie } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
@@ -13,7 +13,28 @@ const DeleteAuthor = () => {
   const [selectedAuthor, setSelectedAuthor] = useState(null);
   const [showAuthorList, setShowAuthorList] = useState(true);
 
+  // Fetch all authors on component mount
+  const fetchAllAuthors = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URI}/authors`);
+      const data = await response.json();
+      setAuthors(data);
+    } catch (error) {
+      console.error('Error fetching authors:', error);
+      setAuthors([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllAuthors();
+  }, []);
+
   const handleSearch = async (query) => {
+    if (!query || query.trim() === '') {
+      // If search is empty, show all authors
+      fetchAllAuthors();
+      return;
+    }
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URI}/authors/search?query=${query}`);
       const data = await response.json();
@@ -34,9 +55,9 @@ const DeleteAuthor = () => {
   const handleReset = () => {
     startTransition(() => {
       setSelectedAuthor(null);
-      setAuthors([]);
       setConfirmDelete('');
       setShowAuthorList(true);
+      fetchAllAuthors(); // Refresh the list
     });
   };
 
@@ -89,7 +110,7 @@ const DeleteAuthor = () => {
             {authors.length === 0 ? (
               <div className="text-center py-8 sm:py-12 bg-slate-800/30 rounded-xl sm:rounded-2xl border border-slate-700/50 mt-4">
                 <FontAwesomeIcon icon={faUserTie} className="text-3xl sm:text-4xl text-slate-600 mb-3 sm:mb-4" />
-                <p className="text-slate-500 text-sm sm:text-base">Search for an author to delete</p>
+                <p className="text-slate-500 text-sm sm:text-base">No authors found</p>
               </div>
             ) : (
               <ItemList items={authors} onSelectItem={handleSelectAuthor} isVisible={showAuthorList} itemType="author" />

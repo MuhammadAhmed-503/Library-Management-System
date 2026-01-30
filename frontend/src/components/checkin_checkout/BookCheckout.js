@@ -1,4 +1,4 @@
-import React, {lazy,startTransition, useState } from 'react';
+import React, {lazy,startTransition, useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart, faArrowRight, faTimes, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
@@ -19,7 +19,40 @@ const BookCheckout = () => {
   const [showBorrowerList, setShowBorrowerList] = useState(true);
   const [showSelectedItems, setShowSelectedItems] = useState(false);
 
+  // Fetch all available books on mount
+  const fetchAllAvailableBooks = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URI}/books/searchout?query=`);
+      const data = await response.json();
+      setBooks(data);
+    } catch (error) {
+      console.error('Error fetching books:', error);
+      setBooks([]);
+    }
+  };
+
+  // Fetch all borrowers on mount
+  const fetchAllBorrowers = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URI}/borrowers`);
+      const data = await response.json();
+      setBorrowers(data);
+    } catch (error) {
+      console.error('Error fetching borrowers:', error);
+      setBorrowers([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllAvailableBooks();
+    fetchAllBorrowers();
+  }, []);
+
   const handleBookSearch = async (query) => {
+    if (!query || query.trim() === '') {
+      fetchAllAvailableBooks();
+      return;
+    }
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URI}/books/searchout?query=${query}`);
       const data = await response.json();
@@ -31,6 +64,10 @@ const BookCheckout = () => {
   };
 
   const handleBorrowerSearch = async (query) => {
+    if (!query || query.trim() === '') {
+      fetchAllBorrowers();
+      return;
+    }
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URI}/borrowers/search?query=${query}`);
       const data = await response.json();
@@ -68,8 +105,6 @@ const BookCheckout = () => {
 
   const handleReset = () => {
     startTransition(() => {
-      setBooks([]);
-      setBorrowers([]);
       setSearchedBook(null);
       setSearchedBorrower(null);
       setConfirmCheckout('');
@@ -78,6 +113,8 @@ const BookCheckout = () => {
       setShowSelectedItems(false);
       setShowBookList(true);
       setShowBorrowerList(true);
+      fetchAllAvailableBooks();
+      fetchAllBorrowers();
     });
   };
   
