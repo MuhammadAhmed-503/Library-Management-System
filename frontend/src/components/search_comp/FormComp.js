@@ -236,6 +236,81 @@ const FormComp = ({ form_data, setConfirm, handler, type, selectedItem }) => {
         </div>
       </div>
     </form>
+  ) : type === "deleteauthor" ? (
+    <form onSubmit={(e) => e.preventDefault()} className="max-w-xl mx-auto w-full">
+      <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-slate-700/50 shadow-xl mt-4">
+        <div className="mb-4 sm:mb-5">
+          <label htmlFor="author_name" className={labelClass}>
+            <FontAwesomeIcon icon={faUser} className="mr-2 text-red-500" />
+            Name
+          </label>
+          <input
+            type="text"
+            name="authorName"
+            id="author_name"
+            className={inputClass}
+            value={selectedItem.authorName}
+            readOnly
+          />
+        </div>
+        <div className="mb-4 sm:mb-5">
+          <label htmlFor="author_email" className={labelClass}>
+            <FontAwesomeIcon icon={faEnvelope} className="mr-2 text-red-500" />
+            Email
+          </label>
+          <input
+            type="text"
+            name="authorEmail"
+            id="author_email"
+            className={inputClass}
+            value={selectedItem.authorEmail || ''}
+            readOnly
+          />
+        </div>
+        <div className="mb-4 sm:mb-5">
+          <label htmlFor="author_phone" className={labelClass}>
+            <FontAwesomeIcon icon={faPhone} className="mr-2 text-red-500" />
+            Phone
+          </label>
+          <input
+            type="text"
+            name="authorPhone"
+            id="author_phone"
+            className={inputClass}
+            value={selectedItem.authorPhone || ''}
+            readOnly
+          />
+        </div>
+        <div className="mb-4 sm:mb-5">
+          <label htmlFor="author_books" className={labelClass}>
+            <FontAwesomeIcon icon={faBook} className="mr-2 text-red-500" />
+            Books
+          </label>
+          <input
+            type="text"
+            name="authorBooks"
+            id="author_books"
+            className={inputClass}
+            value={selectedItem.books ? selectedItem.books.map(b => b.title || b).join(', ') : ''}
+            readOnly
+          />
+        </div>
+        <div className="mb-4 sm:mb-5">
+          <label htmlFor="confirm_delete" className={labelClass}>
+            <FontAwesomeIcon icon={faTrash} className="mr-2 text-red-500" />
+            Confirm Delete
+          </label>
+          <input
+            type="text"
+            name="confirmDelete"
+            id="confirm_delete"
+            placeholder="Type 'delete' to confirm"
+            className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-900/80 border-2 border-red-600/50 rounded-lg sm:rounded-xl text-slate-200 placeholder-slate-500 focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20 transition-all duration-300 text-sm sm:text-base"
+            onChange={(e) => setConfirm(e.target.value)}
+          />
+        </div>
+      </div>
+    </form>
   ) : (
     <p className="text-slate-400">Invalid form type</p>
   );

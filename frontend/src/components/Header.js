@@ -3,7 +3,7 @@ import Logo from '../app_logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown, faAngleUp, faBook, faUser, faEdit, faCheck, faTrash, faPlus, faPen, faTable, faBookOpen, faPenNib, faUsers, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 
-const Header = ({ onAddBookClick, onAddBorrowerClick, onAddAuthorClick, onUpdateBookClick, onUpdateBorrowerClick, onDeleteBookClick, onDeleteBorrowerClick, onUpdateAuthorClick, onCheckinClick, onCheckoutClick, onBooksTableClick, onBorrowersTableClick, onAuthorsTableClick, onBorrowedBooksTableClick, goHome }) => {
+const Header = ({ onAddBookClick, onAddBorrowerClick, onAddAuthorClick, onUpdateBookClick, onUpdateBorrowerClick, onDeleteBookClick, onDeleteBorrowerClick, onDeleteAuthorClick, onUpdateAuthorClick, onCheckinClick, onCheckoutClick, onBooksTableClick, onBorrowersTableClick, onAuthorsTableClick, onBorrowedBooksTableClick, goHome }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isUpdateDropdownOpen, setIsUpdateDropdownOpen] = useState(false);
   const [isDeleteDropdownOpen, setIsDeleteDropdownOpen] = useState(false);
@@ -131,6 +131,9 @@ const Header = ({ onAddBookClick, onAddBorrowerClick, onAddAuthorClick, onUpdate
               <div className="bg-slate-800 border border-slate-700/50 rounded-xl overflow-hidden">
                 <button onClick={onDeleteBookClick} className="flex items-center w-full px-4 py-3 text-slate-200 hover:bg-red-600/20 hover:text-red-400 transition-colors border-b border-slate-700/50">
                   <FontAwesomeIcon icon={faTrash} className="mr-3 text-red-500" /> Delete Book
+                </button>
+                <button onClick={onDeleteAuthorClick} className="flex items-center w-full px-4 py-3 text-slate-200 hover:bg-red-600/20 hover:text-red-400 transition-colors border-b border-slate-700/50">
+                  <FontAwesomeIcon icon={faTrash} className="mr-3 text-red-500" /> Delete Author
                 </button>
                 <button onClick={onDeleteBorrowerClick} className="flex items-center w-full px-4 py-3 text-slate-200 hover:bg-red-600/20 hover:text-red-400 transition-colors">
                   <FontAwesomeIcon icon={faTrash} className="mr-3 text-red-500" /> Delete Borrower
@@ -260,6 +263,9 @@ const Header = ({ onAddBookClick, onAddBorrowerClick, onAddAuthorClick, onUpdate
                 <div className="border-t border-slate-700/50 bg-slate-900/50">
                   <button onClick={() => handleMobileAction(onDeleteBookClick)} className="w-full flex items-center gap-3 p-4 text-slate-300 hover:bg-red-600/20 hover:text-red-400">
                     <FontAwesomeIcon icon={faTrash} className="text-red-500 w-5" /> Delete Book
+                  </button>
+                  <button onClick={() => handleMobileAction(onDeleteAuthorClick)} className="w-full flex items-center gap-3 p-4 text-slate-300 hover:bg-red-600/20 hover:text-red-400 border-t border-slate-700/30">
+                    <FontAwesomeIcon icon={faTrash} className="text-red-500 w-5" /> Delete Author
                   </button>
                   <button onClick={() => handleMobileAction(onDeleteBorrowerClick)} className="w-full flex items-center gap-3 p-4 text-slate-300 hover:bg-red-600/20 hover:text-red-400 border-t border-slate-700/30">
                     <FontAwesomeIcon icon={faTrash} className="text-red-500 w-5" /> Delete Borrower
