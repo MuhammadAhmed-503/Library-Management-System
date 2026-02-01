@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook, faUsers, faUserTie, faBookOpen, faUserSlash, faLayerGroup, faSync } from '@fortawesome/free-solid-svg-icons';
+import { useTheme } from '../context/ThemeContext';
 
 const Home = ({showBooks,showAuthors,showBorrowers,showBorrowersWithoutBook,showCheckoutBooks,showRemainingBooks}) => {
   const [counts, setCounts] = useState({
@@ -12,6 +13,7 @@ const Home = ({showBooks,showAuthors,showBorrowers,showBorrowersWithoutBook,show
   });
   const [forceUpdate, setForceUpdate] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const { isDark } = useTheme();
 
   useEffect(() => {
     const fetchCounts = async () => {
@@ -82,10 +84,16 @@ const Home = ({showBooks,showAuthors,showBorrowers,showBorrowersWithoutBook,show
       {/* Hero Section */}
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-8 sm:mb-12 animate-fadeIn">
-          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-emerald-400 via-cyan-400 to-amber-400 bg-clip-text text-transparent">
+          <h1 className={`text-2xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 ${
+            isDark 
+              ? 'bg-gradient-to-r from-emerald-400 via-cyan-400 to-amber-400 bg-clip-text text-transparent' 
+              : 'bg-gradient-to-r from-emerald-600 via-cyan-600 to-amber-600 bg-clip-text text-transparent'
+          }`}>
             Welcome to Library Management System
           </h1>
-          <p className="text-slate-400 text-sm sm:text-lg lg:text-xl max-w-2xl mx-auto px-4">
+          <p className={`text-sm sm:text-lg lg:text-xl max-w-2xl mx-auto px-4 ${
+            isDark ? 'text-slate-400' : 'text-slate-600'
+          }`}>
             Your complete solution for managing books, authors, and borrowers efficiently
           </p>
         </div>
@@ -146,7 +154,11 @@ const Home = ({showBooks,showAuthors,showBorrowers,showBorrowersWithoutBook,show
         <div className="flex justify-center">
           <button 
             onClick={triggerUpdate} 
-            className={`group flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-2.5 sm:py-3 bg-slate-800/80 hover:bg-slate-700 border border-slate-600/50 hover:border-emerald-500/50 rounded-xl text-slate-300 hover:text-emerald-400 transition-all duration-300 shadow-lg hover:shadow-emerald-500/20 text-sm sm:text-base ${isLoading ? 'animate-pulse' : ''}`}
+            className={`group flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-2.5 sm:py-3 border rounded-xl transition-all duration-300 shadow-lg text-sm sm:text-base ${
+              isDark 
+                ? 'bg-slate-800/80 hover:bg-slate-700 border-slate-600/50 hover:border-emerald-500/50 text-slate-300 hover:text-emerald-400 hover:shadow-emerald-500/20' 
+                : 'bg-white hover:bg-slate-50 border-slate-200 hover:border-emerald-500/50 text-slate-600 hover:text-emerald-600 hover:shadow-emerald-500/10'
+            } ${isLoading ? 'animate-pulse' : ''}`}
           >
             <FontAwesomeIcon icon={faSync} className={`transition-transform duration-500 ${isLoading ? 'animate-spin' : 'group-hover:rotate-180'}`} />
             <span className="font-medium">Refresh Statistics</span>

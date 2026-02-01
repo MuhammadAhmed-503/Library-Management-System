@@ -5,3 +5,72 @@
 .App{
     text-align: left;
 }
+
+/* Theme transition */
+* {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* Animation classes */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Scrollbar styling for dark mode */
+html.dark ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+html.dark ::-webkit-scrollbar-track {
+    background: #1e293b;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+    background: #475569;
+    border-radius: 4px;
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+}
+
+/* Scrollbar styling for light mode */
+html.light ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+html.light ::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+html.light ::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+html.light ::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Focus ring styles */
+input:focus, button:focus, select:focus, textarea:focus {
+    outline: none;
+}
+
+/* Custom checkbox styles */
+input[type="checkbox"] {
+    accent-color: #10b981;
+}
