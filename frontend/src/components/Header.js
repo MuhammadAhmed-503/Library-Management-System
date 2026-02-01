@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Logo from '../app_logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleDown, faAngleUp, faBook, faUser, faEdit, faCheck, faTrash, faPlus, faPen, faTable, faBookOpen, faPenNib, faUsers, faBars, faTimes, faSun, faMoon, faSignOutAlt, faUserShield, faUserPlus, faCog } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faAngleUp, faBook, faUser, faEdit, faCheck, faTrash, faPlus, faPen, faTable, faBookOpen, faPenNib, faUsers, faBars, faTimes, faSun, faMoon, faSignOutAlt, faUserShield, faUserPlus, faCog, faChartBar } from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 
-const Header = ({ onAddBookClick, onAddBorrowerClick, onAddAuthorClick, onUpdateBookClick, onUpdateBorrowerClick, onDeleteBookClick, onDeleteBorrowerClick, onDeleteAuthorClick, onUpdateAuthorClick, onCheckinClick, onCheckoutClick, onBooksTableClick, onBorrowersTableClick, onAuthorsTableClick, onBorrowedBooksTableClick, onAddLibrarianClick, onLibrariansTableClick, goHome }) => {
+const Header = ({ onAddBookClick, onAddBorrowerClick, onAddAuthorClick, onUpdateBookClick, onUpdateBorrowerClick, onDeleteBookClick, onDeleteBorrowerClick, onDeleteAuthorClick, onUpdateAuthorClick, onCheckinClick, onCheckoutClick, onBooksTableClick, onBorrowersTableClick, onAuthorsTableClick, onBorrowedBooksTableClick, onAddLibrarianClick, onLibrariansTableClick, onAdminReportsClick, onMembersTableClick, goHome }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isUpdateDropdownOpen, setIsUpdateDropdownOpen] = useState(false);
   const [isDeleteDropdownOpen, setIsDeleteDropdownOpen] = useState(false);
@@ -106,13 +106,13 @@ const Header = ({ onAddBookClick, onAddBorrowerClick, onAddAuthorClick, onUpdate
             </button>
             <div className={`absolute right-0 z-20 mt-2 w-56 rounded-xl overflow-hidden shadow-2xl shadow-black/50 ${isDropdownOpen ? 'block animate-fadeIn' : 'hidden'}`}>
               <div className={`border rounded-xl overflow-hidden ${isDark ? 'bg-slate-800 border-slate-700/50' : 'bg-white border-slate-200'}`}>
-                <button onClick={onAddBookClick} className={`flex items-center w-full px-4 py-3 transition-colors border-b ${isDark ? 'text-slate-200 hover:bg-emerald-600/20 hover:text-emerald-400 border-slate-700/50' : 'text-slate-700 hover:bg-emerald-50 hover:text-emerald-600 border-slate-100'}`}>
+                <button onClick={() => { onAddBookClick(); setIsDropdownOpen(false); }} className={`flex items-center w-full px-4 py-3 transition-colors border-b ${isDark ? 'text-slate-200 hover:bg-emerald-600/20 hover:text-emerald-400 border-slate-700/50' : 'text-slate-700 hover:bg-emerald-50 hover:text-emerald-600 border-slate-100'}`}>
                   <FontAwesomeIcon icon={faBook} className="mr-3 text-emerald-500" /> Add New Book
                 </button>
-                <button onClick={onAddAuthorClick} className={`flex items-center w-full px-4 py-3 transition-colors border-b ${isDark ? 'text-slate-200 hover:bg-emerald-600/20 hover:text-emerald-400 border-slate-700/50' : 'text-slate-700 hover:bg-emerald-50 hover:text-emerald-600 border-slate-100'}`}>
+                <button onClick={() => { onAddAuthorClick(); setIsDropdownOpen(false); }} className={`flex items-center w-full px-4 py-3 transition-colors border-b ${isDark ? 'text-slate-200 hover:bg-emerald-600/20 hover:text-emerald-400 border-slate-700/50' : 'text-slate-700 hover:bg-emerald-50 hover:text-emerald-600 border-slate-100'}`}>
                   <FontAwesomeIcon icon={faUser} className="mr-3 text-emerald-500" /> Add New Author
                 </button>
-                <button onClick={onAddBorrowerClick} className={`flex items-center w-full px-4 py-3 transition-colors ${isDark ? 'text-slate-200 hover:bg-emerald-600/20 hover:text-emerald-400' : 'text-slate-700 hover:bg-emerald-50 hover:text-emerald-600'}`}>
+                <button onClick={() => { onAddBorrowerClick(); setIsDropdownOpen(false); }} className={`flex items-center w-full px-4 py-3 transition-colors ${isDark ? 'text-slate-200 hover:bg-emerald-600/20 hover:text-emerald-400' : 'text-slate-700 hover:bg-emerald-50 hover:text-emerald-600'}`}>
                   <FontAwesomeIcon icon={faUser} className="mr-3 text-emerald-500" /> Add New Borrower
                 </button>
               </div>
@@ -128,13 +128,13 @@ const Header = ({ onAddBookClick, onAddBorrowerClick, onAddAuthorClick, onUpdate
             </button>
             <div className={`absolute right-0 z-20 mt-2 w-60 rounded-xl overflow-hidden shadow-2xl shadow-black/50 ${isUpdateDropdownOpen ? 'block animate-fadeIn' : 'hidden'}`}>
               <div className={`border rounded-xl overflow-hidden ${isDark ? 'bg-slate-800 border-slate-700/50' : 'bg-white border-slate-200'}`}>
-                <button onClick={onUpdateBookClick} className={`flex items-center w-full px-4 py-3 transition-colors border-b ${isDark ? 'text-slate-200 hover:bg-amber-600/20 hover:text-amber-400 border-slate-700/50' : 'text-slate-700 hover:bg-amber-50 hover:text-amber-600 border-slate-100'}`}>
+                <button onClick={() => { onUpdateBookClick(); setIsUpdateDropdownOpen(false); }} className={`flex items-center w-full px-4 py-3 transition-colors border-b ${isDark ? 'text-slate-200 hover:bg-amber-600/20 hover:text-amber-400 border-slate-700/50' : 'text-slate-700 hover:bg-amber-50 hover:text-amber-600 border-slate-100'}`}>
                   <FontAwesomeIcon icon={faEdit} className="mr-3 text-amber-500" /> Update Book Details
                 </button>
-                <button onClick={onUpdateAuthorClick} className={`flex items-center w-full px-4 py-3 transition-colors border-b ${isDark ? 'text-slate-200 hover:bg-amber-600/20 hover:text-amber-400 border-slate-700/50' : 'text-slate-700 hover:bg-amber-50 hover:text-amber-600 border-slate-100'}`}>
+                <button onClick={() => { onUpdateAuthorClick(); setIsUpdateDropdownOpen(false); }} className={`flex items-center w-full px-4 py-3 transition-colors border-b ${isDark ? 'text-slate-200 hover:bg-amber-600/20 hover:text-amber-400 border-slate-700/50' : 'text-slate-700 hover:bg-amber-50 hover:text-amber-600 border-slate-100'}`}>
                   <FontAwesomeIcon icon={faEdit} className="mr-3 text-amber-500" /> Update Author Details
                 </button>
-                <button onClick={onUpdateBorrowerClick} className={`flex items-center w-full px-4 py-3 transition-colors ${isDark ? 'text-slate-200 hover:bg-amber-600/20 hover:text-amber-400' : 'text-slate-700 hover:bg-amber-50 hover:text-amber-600'}`}>
+                <button onClick={() => { onUpdateBorrowerClick(); setIsUpdateDropdownOpen(false); }} className={`flex items-center w-full px-4 py-3 transition-colors ${isDark ? 'text-slate-200 hover:bg-amber-600/20 hover:text-amber-400' : 'text-slate-700 hover:bg-amber-50 hover:text-amber-600'}`}>
                   <FontAwesomeIcon icon={faEdit} className="mr-3 text-amber-500" /> Update Borrower Details
                 </button>
               </div>
@@ -150,13 +150,13 @@ const Header = ({ onAddBookClick, onAddBorrowerClick, onAddAuthorClick, onUpdate
             </button>
             <div className={`absolute right-0 z-20 mt-2 w-52 rounded-xl overflow-hidden shadow-2xl shadow-black/50 ${isDeleteDropdownOpen ? 'block animate-fadeIn' : 'hidden'}`}>
               <div className={`border rounded-xl overflow-hidden ${isDark ? 'bg-slate-800 border-slate-700/50' : 'bg-white border-slate-200'}`}>
-                <button onClick={onDeleteBookClick} className={`flex items-center w-full px-4 py-3 transition-colors border-b ${isDark ? 'text-slate-200 hover:bg-red-600/20 hover:text-red-400 border-slate-700/50' : 'text-slate-700 hover:bg-red-50 hover:text-red-600 border-slate-100'}`}>
+                <button onClick={() => { onDeleteBookClick(); setIsDeleteDropdownOpen(false); }} className={`flex items-center w-full px-4 py-3 transition-colors border-b ${isDark ? 'text-slate-200 hover:bg-red-600/20 hover:text-red-400 border-slate-700/50' : 'text-slate-700 hover:bg-red-50 hover:text-red-600 border-slate-100'}`}>
                   <FontAwesomeIcon icon={faTrash} className="mr-3 text-red-500" /> Delete Book
                 </button>
-                <button onClick={onDeleteAuthorClick} className={`flex items-center w-full px-4 py-3 transition-colors border-b ${isDark ? 'text-slate-200 hover:bg-red-600/20 hover:text-red-400 border-slate-700/50' : 'text-slate-700 hover:bg-red-50 hover:text-red-600 border-slate-100'}`}>
+                <button onClick={() => { onDeleteAuthorClick(); setIsDeleteDropdownOpen(false); }} className={`flex items-center w-full px-4 py-3 transition-colors border-b ${isDark ? 'text-slate-200 hover:bg-red-600/20 hover:text-red-400 border-slate-700/50' : 'text-slate-700 hover:bg-red-50 hover:text-red-600 border-slate-100'}`}>
                   <FontAwesomeIcon icon={faTrash} className="mr-3 text-red-500" /> Delete Author
                 </button>
-                <button onClick={onDeleteBorrowerClick} className={`flex items-center w-full px-4 py-3 transition-colors ${isDark ? 'text-slate-200 hover:bg-red-600/20 hover:text-red-400' : 'text-slate-700 hover:bg-red-50 hover:text-red-600'}`}>
+                <button onClick={() => { onDeleteBorrowerClick(); setIsDeleteDropdownOpen(false); }} className={`flex items-center w-full px-4 py-3 transition-colors ${isDark ? 'text-slate-200 hover:bg-red-600/20 hover:text-red-400' : 'text-slate-700 hover:bg-red-50 hover:text-red-600'}`}>
                   <FontAwesomeIcon icon={faTrash} className="mr-3 text-red-500" /> Delete Borrower
                 </button>
               </div>
@@ -164,17 +164,15 @@ const Header = ({ onAddBookClick, onAddBorrowerClick, onAddAuthorClick, onUpdate
           </div>
 
           {/* Check-in Button */}
-          <button onClick={onCheckinClick} className="bg-gradient-to-r from-cyan-600 to-cyan-500 hover:from-cyan-500 hover:to-cyan-400 text-white px-3 xl:px-5 py-2 xl:py-2.5 rounded-lg font-semibold transition-all duration-300 flex items-center gap-1 xl:gap-2 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40 hover:-translate-y-0.5 text-sm xl:text-base">
+          <button onClick={onCheckinClick} className="bg-gradient-to-r from-cyan-600 to-cyan-500 hover:from-cyan-500 hover:to-cyan-400 text-white w-[100px] xl:w-[120px] py-2 xl:py-2.5 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center gap-1 xl:gap-2 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40 hover:-translate-y-0.5 text-sm xl:text-base">
             <FontAwesomeIcon icon={faCheck} />
-            <span className="hidden xl:inline">Check In</span>
-            <span className="xl:hidden">In</span>
+            <span>Check In</span>
           </button>
 
           {/* Check-out Button */}
-          <button onClick={onCheckoutClick} className="bg-gradient-to-r from-violet-600 to-violet-500 hover:from-violet-500 hover:to-violet-400 text-white px-3 xl:px-5 py-2 xl:py-2.5 rounded-lg font-semibold transition-all duration-300 flex items-center gap-1 xl:gap-2 shadow-lg shadow-violet-500/20 hover:shadow-violet-500/40 hover:-translate-y-0.5 text-sm xl:text-base">
+          <button onClick={onCheckoutClick} className="bg-gradient-to-r from-violet-600 to-violet-500 hover:from-violet-500 hover:to-violet-400 text-white w-[100px] xl:w-[120px] py-2 xl:py-2.5 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center gap-1 xl:gap-2 shadow-lg shadow-violet-500/20 hover:shadow-violet-500/40 hover:-translate-y-0.5 text-sm xl:text-base">
             <FontAwesomeIcon icon={faCheck} />
-            <span className="hidden xl:inline">Check Out</span>
-            <span className="xl:hidden">Out</span>
+            <span>Check Out</span>
           </button>
 
           {/* View Tables Dropdown */}
@@ -186,16 +184,16 @@ const Header = ({ onAddBookClick, onAddBorrowerClick, onAddAuthorClick, onUpdate
             </button>
             <div className={`absolute right-0 z-20 mt-2 w-56 rounded-xl overflow-hidden shadow-2xl shadow-black/50 ${isViewDropdownOpen ? 'block animate-fadeIn' : 'hidden'}`}>
               <div className={`border rounded-xl overflow-hidden ${isDark ? 'bg-slate-800 border-slate-700/50' : 'bg-white border-slate-200'}`}>
-                <button onClick={onBooksTableClick} className={`flex items-center w-full px-4 py-3 transition-colors border-b ${isDark ? 'text-slate-200 hover:bg-teal-600/20 hover:text-teal-400 border-slate-700/50' : 'text-slate-700 hover:bg-teal-50 hover:text-teal-600 border-slate-100'}`}>
+                <button onClick={() => { onBooksTableClick(); setIsViewDropdownOpen(false); }} className={`flex items-center w-full px-4 py-3 transition-colors border-b ${isDark ? 'text-slate-200 hover:bg-teal-600/20 hover:text-teal-400 border-slate-700/50' : 'text-slate-700 hover:bg-teal-50 hover:text-teal-600 border-slate-100'}`}>
                   <FontAwesomeIcon icon={faBook} className="mr-3 text-teal-500" /> All Books
                 </button>
-                <button onClick={onAuthorsTableClick} className={`flex items-center w-full px-4 py-3 transition-colors border-b ${isDark ? 'text-slate-200 hover:bg-teal-600/20 hover:text-teal-400 border-slate-700/50' : 'text-slate-700 hover:bg-teal-50 hover:text-teal-600 border-slate-100'}`}>
+                <button onClick={() => { onAuthorsTableClick(); setIsViewDropdownOpen(false); }} className={`flex items-center w-full px-4 py-3 transition-colors border-b ${isDark ? 'text-slate-200 hover:bg-teal-600/20 hover:text-teal-400 border-slate-700/50' : 'text-slate-700 hover:bg-teal-50 hover:text-teal-600 border-slate-100'}`}>
                   <FontAwesomeIcon icon={faPenNib} className="mr-3 text-teal-500" /> All Authors
                 </button>
-                <button onClick={onBorrowersTableClick} className={`flex items-center w-full px-4 py-3 transition-colors border-b ${isDark ? 'text-slate-200 hover:bg-teal-600/20 hover:text-teal-400 border-slate-700/50' : 'text-slate-700 hover:bg-teal-50 hover:text-teal-600 border-slate-100'}`}>
+                <button onClick={() => { onBorrowersTableClick(); setIsViewDropdownOpen(false); }} className={`flex items-center w-full px-4 py-3 transition-colors border-b ${isDark ? 'text-slate-200 hover:bg-teal-600/20 hover:text-teal-400 border-slate-700/50' : 'text-slate-700 hover:bg-teal-50 hover:text-teal-600 border-slate-100'}`}>
                   <FontAwesomeIcon icon={faUsers} className="mr-3 text-teal-500" /> All Borrowers
                 </button>
-                <button onClick={onBorrowedBooksTableClick} className={`flex items-center w-full px-4 py-3 transition-colors ${isDark ? 'text-slate-200 hover:bg-amber-600/20 hover:text-amber-400' : 'text-slate-700 hover:bg-amber-50 hover:text-amber-600'}`}>
+                <button onClick={() => { onBorrowedBooksTableClick(); setIsViewDropdownOpen(false); }} className={`flex items-center w-full px-4 py-3 transition-colors ${isDark ? 'text-slate-200 hover:bg-amber-600/20 hover:text-amber-400' : 'text-slate-700 hover:bg-amber-50 hover:text-amber-600'}`}>
                   <FontAwesomeIcon icon={faBookOpen} className="mr-3 text-amber-500" /> Borrowed Books
                 </button>
               </div>
@@ -267,6 +265,12 @@ const Header = ({ onAddBookClick, onAddBorrowerClick, onAddAuthorClick, onUpdate
                     </button>
                     <button onClick={() => { onLibrariansTableClick(); setIsSettingsOpen(false); }} className={`flex items-center w-full px-4 py-3 transition-colors border-b ${isDark ? 'text-slate-200 hover:bg-indigo-600/20 hover:text-indigo-400 border-slate-700/50' : 'text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 border-slate-100'}`}>
                       <FontAwesomeIcon icon={faUsers} className="mr-3 text-indigo-500 w-5" /> Manage Librarians
+                    </button>
+                    <button onClick={() => { onMembersTableClick && onMembersTableClick(); setIsSettingsOpen(false); }} className={`flex items-center w-full px-4 py-3 transition-colors border-b ${isDark ? 'text-slate-200 hover:bg-indigo-600/20 hover:text-indigo-400 border-slate-700/50' : 'text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 border-slate-100'}`}>
+                      <FontAwesomeIcon icon={faUsers} className="mr-3 text-emerald-500 w-5" /> Manage Members
+                    </button>
+                    <button onClick={() => { onAdminReportsClick && onAdminReportsClick(); setIsSettingsOpen(false); }} className={`flex items-center w-full px-4 py-3 transition-colors border-b ${isDark ? 'text-slate-200 hover:bg-indigo-600/20 hover:text-indigo-400 border-slate-700/50' : 'text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 border-slate-100'}`}>
+                      <FontAwesomeIcon icon={faChartBar} className="mr-3 text-amber-500 w-5" /> Reports & Analytics
                     </button>
                   </>
                 )}
@@ -479,6 +483,12 @@ const Header = ({ onAddBookClick, onAddBorrowerClick, onAddAuthorClick, onUpdate
                       </button>
                       <button onClick={() => handleMobileAction(onLibrariansTableClick)} className={`w-full flex items-center gap-3 p-4 border-b ${isDark ? 'text-slate-300 hover:bg-indigo-600/20 hover:text-indigo-400 border-slate-700/30' : 'text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 border-slate-200'}`}>
                         <FontAwesomeIcon icon={faUsers} className="text-indigo-500 w-5" /> Manage Librarians
+                      </button>
+                      <button onClick={() => handleMobileAction(onMembersTableClick)} className={`w-full flex items-center gap-3 p-4 border-b ${isDark ? 'text-slate-300 hover:bg-emerald-600/20 hover:text-emerald-400 border-slate-700/30' : 'text-slate-600 hover:bg-emerald-50 hover:text-emerald-600 border-slate-200'}`}>
+                        <FontAwesomeIcon icon={faUsers} className="text-emerald-500 w-5" /> Manage Members
+                      </button>
+                      <button onClick={() => handleMobileAction(onAdminReportsClick)} className={`w-full flex items-center gap-3 p-4 border-b ${isDark ? 'text-slate-300 hover:bg-amber-600/20 hover:text-amber-400 border-slate-700/30' : 'text-slate-600 hover:bg-amber-50 hover:text-amber-600 border-slate-200'}`}>
+                        <FontAwesomeIcon icon={faChartBar} className="text-amber-500 w-5" /> Reports & Analytics
                       </button>
                     </>
                   )}

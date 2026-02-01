@@ -52,19 +52,12 @@ const UpdateAuthor = () => {
 
   const handleSelectAuthor = async (author) => {
     setSelectedAuthor(author);
-    try {
-      setFormData({
-        authorName: author.authorName,
-        authorEmail: author.authorEmail,
-        authorPhone: author.authorPhone
-      });
-    } catch (error) {
-      setFormData({
-        authorName: author.authorName,
-        authorEmail: '',
-        authorPhone: ''
-      });
-    }
+    setShowAuthorList(false);
+    setFormData({
+      authorName: author.authorName || '',
+      authorEmail: author.authorEmail || '',
+      authorPhone: author.authorPhone || ''
+    });
   };
 
   const handleChange = (e) => {
@@ -90,10 +83,12 @@ const UpdateAuthor = () => {
         console.log('Author updated successfully!');
         setFormData({
             authorName: '',
-            authorEmail: ''
+            authorEmail: '',
+            authorPhone: ''
         });
         setAuthors([]);
         setSelectedAuthor(null);
+        setShowAuthorList(true);
       }
     } catch (error) {
       toast.error('Error updating author');

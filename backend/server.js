@@ -8,6 +8,7 @@ const borrowerRoutes = require('./routes/borrowerRoutes');
 const authorRoutes = require('./routes/authorRoutes');
 const countRoutes = require('./routes/countRoutes');
 const authRoutes = require('./routes/authRoutes');
+const memberRoutes = require('./routes/memberRoutes');
 
 const app = express();
 app.use(express.json());
@@ -30,6 +31,7 @@ console.log(`ASCII Domain: ${asciiDomain}`);
 
 // Auth routes
 app.use('/api/auth', authRoutes);
+app.use('/api/members', memberRoutes);
 
 app.use('/api/books', bookRoutes);
 app.use('/api/borrowers', borrowerRoutes);

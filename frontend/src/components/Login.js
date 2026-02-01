@@ -1,15 +1,19 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faLock, faSignInAlt, faBook, faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faLock, faSignInAlt, faBook, faSun, faMoon, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
 import logo from '../app_logo.png';
+import Register from './member/Register';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [loginType, setLoginType] = useState('staff'); // 'staff' or 'member'
+  const [showRegister, setShowRegister] = useState(false);
   const { login } = useAuth();
   const { theme, toggleTheme, isDark } = useTheme();
 
@@ -22,15 +26,50 @@ const Login = () => {
     }
 
     setIsLoading(true);
-    const result = await login(username, password);
-    setIsLoading(false);
+    
+    if (loginType === 'member') {
+      // Member login
+      try {
+        const response = await fetch(`${process.env.REACT_APP_API_URI}/members/login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ username, password })
+        });
 
-    if (result.success) {
-      toast.success(result.message);
+        const data = await response.json();
+        setIsLoading(false);
+
+        if (response.ok) {
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
+          toast.success(data.message);
+          window.location.reload();
+        } else {
+          toast.error(data.message);
+        }
+      } catch (error) {
+        setIsLoading(false);
+        console.error('Login error:', error);
+        toast.error('Network error. Please try again.');
+      }
     } else {
-      toast.error(result.message);
+      // Staff (admin/librarian) login
+      const result = await login(username, password);
+      setIsLoading(false);
+
+      if (result.success) {
+        toast.success(result.message);
+      } else {
+        toast.error(result.message);
+      }
     }
   };
+
+  if (showRegister) {
+    return <Register onBackToLogin={() => setShowRegister(false)} />;
+  }
 
   return (
     <div className={`min-h-screen flex items-center justify-center p-4 transition-colors duration-300 ${
@@ -74,6 +113,32 @@ const Login = () => {
           <p className={`${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
             Sign in to continue
           </p>
+        </div>
+
+        {/* Login Type Tabs */}
+        <div className={`flex rounded-xl p-1 mb-6 ${isDark ? 'bg-slate-800/50' : 'bg-slate-100'}`}>
+          <button
+            type="button"
+            onClick={() => setLoginType('staff')}
+            className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
+              loginType === 'staff'
+                ? 'bg-emerald-600 text-white shadow-lg'
+                : isDark ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-800'
+            }`}
+          >
+            Staff Login
+          </button>
+          <button
+            type="button"
+            onClick={() => setLoginType('member')}
+            className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
+              loginType === 'member'
+                ? 'bg-emerald-600 text-white shadow-lg'
+                : isDark ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-800'
+            }`}
+          >
+            Member Login
+          </button>
         </div>
 
         {/* Login Form */}
@@ -156,13 +221,21 @@ const Login = () => {
           </button>
         </form>
 
-        {/* Footer */}
-        <div className={`mt-8 pt-6 border-t text-center text-sm ${
-          isDark ? 'border-slate-800 text-slate-500' : 'border-slate-200 text-slate-500'
-        }`}>
-          <p>Admin: Use credentials from .env file</p>
-          <p className="mt-1">Librarians: Use credentials set by admin</p>
-        </div>
+        {/* Register Link for Members */}
+        {loginType === 'member' && (
+          <div className="mt-6 text-center">
+            <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+              Don't have an account?{' '}
+              <button
+                onClick={() => setShowRegister(true)}
+                className="text-emerald-500 hover:text-emerald-400 font-medium"
+              >
+                Register here
+              </button>
+            </p>
+          </div>
+        )}
+
       </div>
     </div>
   );

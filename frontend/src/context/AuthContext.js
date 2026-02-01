@@ -83,6 +83,14 @@ export const AuthProvider = ({ children }) => {
     return !!token && !!user;
   };
 
+  const isLibrarian = () => {
+    return user && (user.role === 'admin' || user.role === 'librarian');
+  };
+
+  const isMember = () => {
+    return user && user.role === 'member';
+  };
+
   return (
     <AuthContext.Provider value={{ 
       user, 
@@ -90,6 +98,8 @@ export const AuthProvider = ({ children }) => {
       login, 
       logout, 
       isAdmin, 
+      isLibrarian,
+      isMember,
       isAuthenticated, 
       loading 
     }}>

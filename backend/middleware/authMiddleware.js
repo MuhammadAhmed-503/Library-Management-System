@@ -28,4 +28,31 @@ const isAdmin = (req, res, next) => {
   }
 };
 
-module.exports = { verifyToken, isAdmin };
+// Check if user is librarian or admin
+const isLibrarian = (req, res, next) => {
+  if (req.user && (req.user.role === 'admin' || req.user.role === 'librarian')) {
+    next();
+  } else {
+    return res.status(403).json({ message: 'Access denied. Librarian privileges required.' });
+  }
+};
+
+// Check if user is member
+const isMember = (req, res, next) => {
+  if (req.user && req.user.role === 'member') {
+    next();
+  } else {
+    return res.status(403).json({ message: 'Access denied. Member access only.' });
+  }
+};
+
+// Check if user is authenticated (any role)
+const isAuthenticated = (req, res, next) => {
+  if (req.user) {
+    next();
+  } else {
+    return res.status(401).json({ message: 'Authentication required.' });
+  }
+};
+
+module.exports = { verifyToken, isAdmin, isLibrarian, isMember, isAuthenticated };

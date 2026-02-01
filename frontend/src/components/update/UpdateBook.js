@@ -61,9 +61,10 @@ const UpdateBook = () => {
     setFormData({
       bookId: book._id,
       title: book.title,
-      authorName: book?.author.authorName || '', 
+      authorName: book?.author?.authorName || '', 
       category: book.category || '', 
-      price: book.price ? book.price.toString() : ''
+      price: book.price ? book.price.toString() : '',
+      preAuthorID: authorId
     });
   };
 
@@ -119,18 +120,6 @@ const UpdateBook = () => {
       console.error('Error updating book:', error);
     }
   };
-
-  useEffect(() => {
-    if (selectedBook) {
-      setFormData({
-        bookId: selectedBook._id,
-        title: selectedBook.title,
-        authorName: selectedBook.authorName,
-        category: selectedBook.category,
-        price: selectedBook.price.toString()
-      });
-    }
-  }, [selectedBook]);
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 animate-fadeIn">
